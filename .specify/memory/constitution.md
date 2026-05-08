@@ -1,50 +1,51 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Task-Board6 Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Readable Code
+Code must be clean, well-documented, and follow consistent coding standards. Use TypeScript for type safety and clarity. Avoid overly complex patterns.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Responsive UI/UX
+The application must be fully responsive, ensuring usability across devices and screen sizes. Prioritize user-friendly design and intuitive navigation.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Accessibility-Friendly Components
+All components must adhere to accessibility standards (e.g., WCAG). Use semantic HTML and ARIA attributes where necessary.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. LocalStorage Persistence
+Persist user data locally using `localStorage` for a seamless user experience. Ensure data integrity and avoid overloading storage.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Minimal Dependencies
+Favor built-in browser APIs and lightweight libraries. Avoid unnecessary dependencies to reduce bundle size and improve maintainability.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Clear File Organization
+Organize files logically by feature or domain. Use clear naming conventions and maintain a predictable folder structure.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### VII. Security Best Practices
+Avoid hardcoded secrets. Sanitize user inputs and follow secure coding practices to prevent vulnerabilities.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Additional Constraints
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Technology Stack
+- React (with functional components and hooks)
+- TypeScript
+- CSS-in-JS or modular CSS for styling
+
+### Deployment
+- Static hosting (e.g., GitHub Pages, Vercel)
+- No backend services required
+
+## Development Workflow
+
+### Code Review
+- All code must be peer-reviewed before merging.
+- Ensure adherence to principles and coding standards.
+
+### Testing
+- Write unit tests for all components.
+- Perform manual testing for responsiveness and accessibility.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other practices. Amendments require documentation, approval, and a migration plan.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-05-08 | **Last Amended**: 2026-05-08

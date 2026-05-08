@@ -1,5 +1,7 @@
 # [CHECKLIST TYPE] Checklist: [FEATURE NAME]
 
+> Template Notice: This is a reusable checklist template used by `/speckit.checklist` to generate feature-specific checklists. Replace placeholders when generating or editing for a specific feature.
+
 **Purpose**: [Brief description of what this checklist covers]
 **Created**: [DATE]
 **Feature**: [Link to spec.md or relevant documentation]

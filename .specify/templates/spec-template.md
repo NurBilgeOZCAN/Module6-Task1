@@ -1,5 +1,7 @@
 # Feature Specification: [FEATURE NAME]
 
+> Template Notice: This spec template is used by `/speckit.specify`. Keep user stories prioritized, measurable acceptance criteria, and explicit edge cases.
+
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
 **Status**: Draft  

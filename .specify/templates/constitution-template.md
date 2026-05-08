@@ -1,4 +1,5 @@
 # [PROJECT_NAME] Constitution
+> Template Notice: Use this template to create a project-wide constitution via `/speckit.constitution`. Fill in clear, non-negotiable principles and governance rules.
 <!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
 
 ## Core Principles

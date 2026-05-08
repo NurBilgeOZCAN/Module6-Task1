@@ -18,6 +18,8 @@ description: "Task list template for feature implementation"
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
 
+> Template Notice: This tasks template is used by `/speckit.tasks` to generate a structured `tasks.md` file. Replace placeholders with concrete, dependency-ordered tasks and keep IDs unique across the project.
+
 ## Path Conventions
 
 - **Single project**: `src/`, `tests/` at repository root

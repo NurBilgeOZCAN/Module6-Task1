@@ -1,5 +1,7 @@
 # Implementation Plan: [FEATURE]
 
+> Template Notice: Use this template as the canonical plan output for `/speckit.plan`. Populate Technical Context, Architecture, and Phases to guide implementation.
+
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
