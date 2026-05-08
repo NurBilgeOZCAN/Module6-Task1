@@ -1,7 +1,7 @@
 # Technical Implementation Plan: Personal Task Board
 
 ## Technical Context
-The Personal Task Board is a React + TypeScript single-page application designed for individual users to manage tasks in a Kanban-style board. The application will use Vite for fast development, Tailwind CSS for styling, and localStorage for data persistence. Drag-and-drop functionality will be implemented using a lightweight library (e.g., `react-beautiful-dnd`).
+The Personal Task Board is a React + TypeScript single-page application designed for individual users to manage tasks in a Kanban-style board. The application will use Vite for fast development, Tailwind CSS for styling, and localStorage for data persistence. Drag-and-drop functionality will be implemented using `@dnd-kit` primitives behind a small adapter.
 
 ## Project Architecture
 - **Frontend Framework**: React (functional components with hooks)
@@ -9,7 +9,7 @@ The Personal Task Board is a React + TypeScript single-page application designed
 - **Styling**: Tailwind CSS
 - **State Management**: React's `useState` and `useReducer` hooks
 - **Persistence**: localStorage
-- **Drag-and-Drop**: `react-beautiful-dnd` or similar
+ - **Drag-and-Drop**: `@dnd-kit` primitives (implemented via an adapter)
 - **Testing**: Vitest and React Testing Library (mandatory per constitution)
 
 ## Component Structure
@@ -62,9 +62,8 @@ type BoardState = {
 - Use `try-catch` to handle potential errors during read/write operations.
 
 ## Drag-and-Drop Strategy
-- Use `react-beautiful-dnd` for intuitive drag-and-drop interactions.
-- Implement `onDragEnd` to update the board state when tasks are moved.
-- Ensure accessibility by providing keyboard support for drag-and-drop.
+- Use `@dnd-kit/core` + `@dnd-kit/sortable` for drag-and-drop primitives implemented behind a small adapter (`src/lib/dnd/*`).
+- Implement drop handlers to update the board state when tasks are moved, and ensure keyboard accessibility and ARIA attributes are present.
 
 ## Responsive UI Strategy
 - Use Tailwind CSS utility classes for responsive design.
@@ -73,6 +72,22 @@ type BoardState = {
 
 ## Tailwind Rationale
 - Tailwind CSS is chosen for fast, consistent, and responsive styling with minimal custom CSS. It enables utility-driven layouts, reduces global CSS drift, and keeps styles modular and maintainable. This choice supports the constitution principles (readable code and minimal dependencies) and is documented here for transparency.
+
+This approach is now constitution-compliant: the project constitution permits utility-first frameworks (e.g., Tailwind) when they reduce custom CSS complexity and maintain accessibility and responsiveness.
+
+## Drag-and-Drop Strategy (Updated)
+- Use `@dnd-kit/core` and related `@dnd-kit` utilities instead of `react-beautiful-dnd` (the latter is deprecated). Implement the DnD layer behind a small abstraction (`src/lib/dnd/*`) so the implementation can be swapped later with minimal changes.
+- Ensure keyboard accessibility and ARIA attributes are provided by the DnD adapter and supplement with custom focus management as needed.
+
+## Performance Targets (Added)
+- Initial render: The UI should remain responsive with 500 tasks. Use a deterministic synthetic dataset (seeded generator) for testing; in CI prefer regression checks (render-count assertions, relative timing deltas) rather than machine-dependent absolute timings.
+- Interaction latency: Drag/move interactions should feel immediate and avoid unnecessary full-list re-renders. Use `React.memo`, `useMemo`, and targeted reducer updates. Implement tests that assert render counts (no full-list re-render on single-task move) and verify relative visual-update responsiveness in the harness.
+
+## Accessibility Targets (Added)
+- Keyboard navigation for create/edit/delete/move must be supported and tested.
+- Visible focus states present on interactive controls.
+- ARIA labels/roles provided for columns, task cards, dialogs/forms, and drag regions.
+- Testing strategy includes RTL tests preferring semantic queries and an `axe` or `jest-axe` smoke test in CI.
 
 ## Performance Strategy
 - Apply `React.memo` to `TaskCard` to prevent unnecessary re-renders when unrelated state changes occur.
@@ -88,7 +103,7 @@ type BoardState = {
 ## Implementation Phases
 ### Phase 1: Setup
 1. Initialize the project with Vite and TypeScript.
-2. Install dependencies: React, Tailwind CSS, `react-beautiful-dnd`, `vitest`, `@testing-library/react`.
+2. Install dependencies: React, Tailwind CSS, `@dnd-kit/core`, `@dnd-kit/sortable`, `vitest`, `@testing-library/react`.
 3. Set up the project structure and testing environment.
 
 ### Phase 2: Core Components & Logic
@@ -98,7 +113,7 @@ type BoardState = {
 
 ### Phase 3: Styling & Interactive Features
 1. Apply global styles using Tailwind CSS.
-2. Integrate `react-beautiful-dnd` and implement drag-and-drop.
+2. Integrate `@dnd-kit` via the DnD adapter and implement drag-and-drop.
 3. Implement `TaskForm` for creating and editing tasks.
 
 ### Phase 4: persistence & Comprehensive Testing

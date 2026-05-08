@@ -18,9 +18,9 @@ This document records decisions and rationale for the key technical choices in t
 - Trade-offs: No cross-device sync; limited storage size (~5MB). Documented behaviors include last-write-wins within the same session.
 
 ## Drag-and-Drop Approach
-- Decision: Use `react-beautiful-dnd` (or a similar lightweight, accessible DnD library).
-- Rationale: `react-beautiful-dnd` provides accessible drag-and-drop with keyboard support and a solid API for reordering within and between lists. It integrates well with React state and is well-documented.
-- Trade-offs: Adds a dependency; consider smaller alternatives if bundle size becomes a concern. Ensure ARIA and keyboard behaviors are explicitly tested.
+- Decision: Use `@dnd-kit/core` and related `@dnd-kit` utilities instead of `react-beautiful-dnd`.
+- Rationale: `@dnd-kit` is actively maintained, composable, and provides primitives that make accessibility and keyboard interactions easier to implement and test. Implement the DnD layer behind a small adapter (`src/lib/dnd/*`) so the concrete library can be swapped later if needed.
+- Trade-offs: `@dnd-kit` may require more primitive wiring than higher-level libraries, but the long-term maintenance and accessibility benefits outweigh this cost.
 
 ## Testing: Vitest + React Testing Library
 - Decision: Use Vitest as the test runner and React Testing Library (RTL) for component tests.

@@ -17,6 +17,11 @@ Persist user data locally using `localStorage` for a seamless user experience. E
 ### V. Minimal Dependencies
 Favor built-in browser APIs and lightweight libraries. Avoid unnecessary dependencies to reduce bundle size and improve maintainability.
 
+Tailwind and Utility-First CSS: Utility-first frameworks such as Tailwind CSS are explicitly permitted when they demonstrably improve consistency, reduce custom CSS surface area, and keep styles maintainable and minimal. Use Tailwind only when the team documents the rationale and ensures styles remain accessible, responsive, and easy to maintain. When used, follow these rules:
+- Keep component styles small and composable (avoid large global overrides).
+- Ensure accessible defaults (visible focus, sufficient contrast) and document any deviations.
+- Keep a small design token set and avoid duplicative utilities.
+
 ### VI. Clear File Organization
 Organize files logically by feature or domain. Use clear naming conventions and maintain a predictable folder structure.
 
@@ -29,6 +34,7 @@ Avoid hardcoded secrets. Sanitize user inputs and follow secure coding practices
 - React (with functional components and hooks)
 - TypeScript
 - CSS-in-JS or modular CSS for styling
+ - Tailwind CSS or other utility-first frameworks (permitted when used with documented rationale and accessibility/maintainability safeguards)
 
 ### Deployment
 - Static hosting (e.g., GitHub Pages, Vercel)
