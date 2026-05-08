@@ -1,136 +1,122 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { BoardState } from './types';
+import Board from './components/Board';
+import { loadBoardState, saveBoardState } from './utils/localStorage';
 
-export default function App() {
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="max-w-4xl mx-auto p-6">
-        <h1 className="text-2xl font-semibold">Personal Task Board (Scaffold)</h1>
-      </header>
-      <main className="max-w-4xl mx-auto p-6">
-        <p className="text-sm text-slate-600">Scaffold complete. Implement feature logic in subsequent phases.</p>
-      </main>
-    </div>
-  )
-}
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import TaskForm from './components/TaskForm';
+import { Task } from './types';
+
+const INITIAL_STATE: BoardState = {
+  columns: [
+    { id: 'todo', name: 'To Do', tasks: [] },
+    { id: 'in-progress', name: 'In Progress', tasks: [] },
+    { id: 'done', name: 'Done', tasks: [] },
+  ],
+};
+
+import React, { useState, useEffect, useCallback } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [state, setState] = useState<BoardState>(() => {
+    return loadBoardState() || INITIAL_STATE;
+  });
+
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [activeColumnId, setActiveColumnId] = useState<string | null>(null);
+
+  useEffect(() => {
+    saveBoardState(state);
+  }, [state]);
+
+  const handleAddTask = useCallback((columnId: string) => {
+    setActiveColumnId(columnId);
+    setEditingTask(null);
+    setIsFormOpen(true);
+  }, []);
+
+  const handleEditTask = useCallback((task: Task) => {
+    setEditingTask(task);
+    setIsFormOpen(true);
+  }, []);
+
+  const handleDeleteTask = useCallback((taskId: string) => {
+    setState(prev => ({
+      ...prev,
+      columns: prev.columns.map(col => ({
+        ...col,
+        tasks: col.tasks.filter(t => t.id !== taskId)
+      }))
+    }));
+  }, []);
+
+  const handleFormSubmit = useCallback((taskData: Omit<Task, 'id'>) => {
+    if (editingTask) {
+      // Edit existing task
+      setState(prev => ({
+        ...prev,
+        columns: prev.columns.map(col => ({
+          ...col,
+          tasks: col.tasks.map(t => t.id === editingTask.id ? { ...t, ...taskData } : t)
+        }))
+      }));
+    } else {
+      // Create new task
+      const newTask: Task = {
+        id: crypto.randomUUID(),
+        ...taskData
+      };
+      setState(prev => ({
+        ...prev,
+        columns: prev.columns.map(col => 
+          col.id === (activeColumnId || 'todo')
+            ? { ...col, tasks: [...col.tasks, newTask] }
+            : col
+        )
+      }));
+    }
+    setIsFormOpen(false);
+    setEditingTask(null);
+    setActiveColumnId(null);
+  }, [editingTask, activeColumnId]);
+
+  const handleStateChange = useCallback((newState: BoardState) => {
+    setState(newState);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // 'n' key opens task form if not in an input
+      if (e.key === 'n' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName || '')) {
+        handleAddTask('todo');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleAddTask]);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="min-h-screen bg-slate-50">
+      <Board 
+        state={state} 
+        onStateChange={handleStateChange} 
+        onAddTask={handleAddTask}
+        onEditTask={handleEditTask}
+        onDeleteTask={handleDeleteTask}
+      />
+      {isFormOpen && (
+        <TaskForm 
+          initialTask={editingTask || undefined}
+          onSubmit={handleFormSubmit}
+          onCancel={() => {
+            setIsFormOpen(false);
+            setEditingTask(null);
+            setActiveColumnId(null);
+          }}
+        />
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
