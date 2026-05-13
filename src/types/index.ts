@@ -1,21 +1,26 @@
 export interface Task {
   id: string;
   title: string;
-  description: string;
+  description?: string;
+  priority: 'High' | 'Medium' | 'Low';
+  dueDate?: string;
+  status: 'To Do' | 'In Progress' | 'Done';
 }
 
 export interface Column {
   id: string;
-  name: string;
-  tasks: Task[];
+  title: string;
+  taskIds: string[];
 }
 
 export interface BoardState {
   columns: Column[];
+  tasks: Record<string, Task>;
 }
 
 export interface ColumnProps {
   column: Column;
+  tasks: Task[];
 }
 
 export interface TaskProps {

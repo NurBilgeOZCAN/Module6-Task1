@@ -9,12 +9,21 @@ describe('Board', () => {
     columns: [
       {
         id: 'col-1',
-        name: 'To Do',
-        tasks: [{ id: 'task-1', title: 'Test Task', description: 'Test Desc' }],
+        title: 'To Do',
+        taskIds: ['task-1'],
       },
-      { id: 'col-2', name: 'In Progress', tasks: [] },
-      { id: 'col-3', name: 'Done', tasks: [] },
+      { id: 'col-2', title: 'In Progress', taskIds: [] },
+      { id: 'col-3', title: 'Done', taskIds: [] },
     ],
+    tasks: {
+      'task-1': {
+        id: 'task-1',
+        title: 'Test Task',
+        description: 'Test Desc',
+        priority: 'Medium',
+        status: 'To Do',
+      },
+    },
   };
 
   const mockOnStateChange = vi.fn();

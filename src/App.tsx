@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BoardState } from './types';
 import Board from './components/Board';
 import { loadBoardState, saveBoardState } from './utils/localStorage';
@@ -8,13 +8,12 @@ import { Task } from './types';
 
 const INITIAL_STATE: BoardState = {
   columns: [
-    { id: 'todo', name: 'To Do', tasks: [] },
-    { id: 'in-progress', name: 'In Progress', tasks: [] },
-    { id: 'done', name: 'Done', tasks: [] },
+    { id: 'todo', title: 'To Do', taskIds: [] },
+    { id: 'in-progress', title: 'In Progress', taskIds: [] },
+    { id: 'done', title: 'Done', taskIds: [] },
   ],
+  tasks: {},
 };
-
-import React, { useState, useEffect, useCallback } from 'react';
 
 function App() {
   const [state, setState] = useState<BoardState>(() => {
@@ -41,13 +40,19 @@ function App() {
   }, []);
 
   const handleDeleteTask = useCallback((taskId: string) => {
-    setState(prev => ({
-      ...prev,
-      columns: prev.columns.map(col => ({
-        ...col,
-        tasks: col.tasks.filter(t => t.id !== taskId)
-      }))
-    }));
+    setState(prev => {
+      const newTasks = { ...prev.tasks };
+      delete newTasks[taskId];
+      
+      return {
+        ...prev,
+        tasks: newTasks,
+        columns: prev.columns.map(col => ({
+          ...col,
+          taskIds: col.taskIds.filter(id => id !== taskId)
+        }))
+      };
+    });
   }, []);
 
   const handleFormSubmit = useCallback((taskData: Omit<Task, 'id'>) => {
@@ -55,10 +60,10 @@ function App() {
       // Edit existing task
       setState(prev => ({
         ...prev,
-        columns: prev.columns.map(col => ({
-          ...col,
-          tasks: col.tasks.map(t => t.id === editingTask.id ? { ...t, ...taskData } : t)
-        }))
+        tasks: {
+          ...prev.tasks,
+          [editingTask.id]: { ...prev.tasks[editingTask.id], ...taskData }
+        }
       }));
     } else {
       // Create new task
@@ -66,11 +71,17 @@ function App() {
         id: crypto.randomUUID(),
         ...taskData
       };
+      const targetColumnId = activeColumnId || 'todo';
+      
       setState(prev => ({
         ...prev,
+        tasks: {
+          ...prev.tasks,
+          [newTask.id]: newTask
+        },
         columns: prev.columns.map(col => 
-          col.id === (activeColumnId || 'todo')
-            ? { ...col, tasks: [...col.tasks, newTask] }
+          col.id === targetColumnId
+            ? { ...col, taskIds: [...col.taskIds, newTask.id] }
             : col
         )
       }));

@@ -1,8 +1,8 @@
 import { arrayMove } from '@dnd-kit/sortable';
-import { BoardState, Task } from '../../types';
+import { BoardState } from '../../types';
 
 export const findColumnOfTask = (columns: BoardState['columns'], taskId: string) => {
-  return columns.find((col) => col.tasks.some((task) => task.id === taskId));
+  return columns.find((col) => col.taskIds.includes(taskId));
 };
 
 export const moveTask = (
@@ -15,31 +15,31 @@ export const moveTask = (
 
   if (!activeColumn || !overColumn) return state;
 
-  const activeIndex = activeColumn.tasks.findIndex((t) => t.id === activeId);
-  const overIndex = overColumn.tasks.findIndex((t) => t.id === overId);
+  const activeIndex = activeColumn.taskIds.indexOf(activeId);
+  const overIndex = overColumn.taskIds.indexOf(overId);
 
   const newColumns = state.columns.map((col) => {
     if (col.id === activeColumn.id && col.id === overColumn.id) {
       return {
         ...col,
-        tasks: arrayMove(col.tasks, activeIndex, overIndex),
+        taskIds: arrayMove(col.taskIds, activeIndex, overIndex),
       };
     }
 
     if (col.id === activeColumn.id) {
       return {
         ...col,
-        tasks: col.tasks.filter((t) => t.id !== activeId),
+        taskIds: col.taskIds.filter((id) => id !== activeId),
       };
     }
 
     if (col.id === overColumn.id) {
-      const taskToMove = activeColumn.tasks[activeIndex];
-      const newTasks = [...col.tasks];
-      newTasks.splice(overIndex >= 0 ? overIndex : newTasks.length, 0, taskToMove);
+      const newTaskIds = [...col.taskIds];
+      const insertIndex = overIndex >= 0 ? overIndex : newTaskIds.length;
+      newTaskIds.splice(insertIndex, 0, activeId);
       return {
         ...col,
-        tasks: newTasks,
+        taskIds: newTaskIds,
       };
     }
 

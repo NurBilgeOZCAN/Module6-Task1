@@ -9,16 +9,12 @@ import {
   useSensors,
   DragStartEvent,
   DragOverEvent,
-  DragEndEvent,
-  DefaultAnnouncements,
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import Column from './Column';
 import TaskCard from './TaskCard';
 import { BoardState, Task } from '../types';
 import { moveTask } from '../lib/dnd/adapter';
-
-import TaskForm from './TaskForm';
 
 interface BoardProps {
   state: BoardState;
@@ -46,9 +42,8 @@ const Board: React.FC<BoardProps> = ({
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    const task = state.columns
-      .flatMap((col) => col.tasks)
-      .find((t) => t.id === active.id);
+    const taskId = active.id as string;
+    const task = state.tasks[taskId];
     if (task) setActiveTask(task);
   };
 
@@ -62,7 +57,7 @@ const Board: React.FC<BoardProps> = ({
     }
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = () => {
     setActiveTask(null);
   };
 
@@ -85,15 +80,19 @@ const Board: React.FC<BoardProps> = ({
           </button>
         </header>
         <main className="flex-1 overflow-x-auto bg-slate-50 p-6 flex gap-6 items-start">
-          {state.columns.map((column) => (
-            <Column 
-              key={column.id} 
-              column={column} 
-              onAddTask={onAddTask}
-              onEditTask={onEditTask}
-              onDeleteTask={onDeleteTask}
-            />
-          ))}
+          {state.columns.map((column) => {
+            const columnTasks = column.taskIds.map(id => state.tasks[id]).filter(Boolean);
+            return (
+              <Column 
+                key={column.id} 
+                column={column}
+                tasks={columnTasks}
+                onAddTask={onAddTask}
+                onEditTask={onEditTask}
+                onDeleteTask={onDeleteTask}
+              />
+            );
+          })}
         </main>
       </div>
       <DragOverlay>

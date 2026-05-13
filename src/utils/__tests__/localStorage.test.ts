@@ -7,10 +7,19 @@ describe('localStorage utilities', () => {
     columns: [
       {
         id: 'col-1',
-        name: 'To Do',
-        tasks: [{ id: 'task-1', title: 'Task 1', description: 'Desc 1' }],
+        title: 'To Do',
+        taskIds: ['task-1'],
       },
     ],
+    tasks: {
+      'task-1': {
+        id: 'task-1',
+        title: 'Task 1',
+        description: 'Desc 1',
+        priority: 'Medium',
+        status: 'To Do',
+      },
+    },
   };
 
   beforeEach(() => {

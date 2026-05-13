@@ -2,17 +2,19 @@ import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import TaskCard from './TaskCard';
-import { ColumnProps } from '../types';
+import type { Column, Task } from '../types';
 
 interface ColumnComponentProps {
-  column: ColumnType;
+  column: Column;
+  tasks: Task[];
   onAddTask: (columnId: string) => void;
   onEditTask: (task: Task) => void;
   onDeleteTask: (taskId: string) => void;
 }
 
 const Column: React.FC<ColumnComponentProps> = ({ 
-  column, 
+  column,
+  tasks,
   onAddTask, 
   onEditTask, 
   onDeleteTask 
@@ -25,18 +27,18 @@ const Column: React.FC<ColumnComponentProps> = ({
     <section 
       ref={setNodeRef}
       className="column bg-white p-4 rounded shadow min-w-[300px] flex flex-col max-h-full" 
-      aria-label={column.name}
+      aria-label={column.title}
     >
-      <h3 className="text-md font-semibold mb-3 text-slate-700">{column.name}</h3>
+      <h3 className="text-md font-semibold mb-3 text-slate-700">{column.title}</h3>
       <div className="task-list flex flex-col gap-2 overflow-y-auto flex-1 min-h-[100px]">
         <SortableContext 
-          items={column.tasks.map(t => t.id)} 
+          items={tasks.map(t => t.id)} 
           strategy={verticalListSortingStrategy}
         >
-          {column.tasks.length === 0 ? (
+          {tasks.length === 0 ? (
             <p className="text-sm text-slate-400 italic text-center py-4">No tasks yet</p>
           ) : (
-            column.tasks.map((task) => (
+            tasks.map((task) => (
               <TaskCard 
                 key={task.id} 
                 task={task} 

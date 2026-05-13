@@ -9,6 +9,8 @@ describe('TaskCard', () => {
     id: 'task-1',
     title: 'Test Task',
     description: 'Test Description',
+    priority: 'Medium',
+    status: 'To Do',
   };
 
   it('renders task title', () => {

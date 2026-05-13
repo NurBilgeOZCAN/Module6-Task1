@@ -21,6 +21,8 @@ describe('TaskForm', () => {
     expect(handleSubmit).toHaveBeenCalledWith({
       title: 'New Test Task',
       description: 'New Description',
+      priority: 'Medium',
+      status: 'To Do',
     });
   });
 
